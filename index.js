@@ -22,8 +22,8 @@ io.on('connection', (socket) => {
         const { user, error } = addUser(socket.id, name, room)
         if (error) return callback(error)
 
-        socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the room ${user.room}` })
-        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name}, has joined` })
+        socket.emit('message', { user: 'admin', text: `Hello ${user.name}, welcome to room: ${user.room}` })
+        socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name}, has joined the room` })
 
         socket.join(user.room)
 
@@ -41,11 +41,21 @@ io.on('connection', (socket) => {
         callback()
     })
 
+    socket.on('seeUsersOnline', ({ name, room}, callback) => {
+        const users = getUsersInRoom(room)
+
+        users.map( userInTheRoom => {
+            socket.emit('message', {user: name, text: `${userInTheRoom.name} is in the room`})
+        })
+
+        callback()
+    })
+
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
 
         if(user){
-            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left.`})
+            io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left the room`})
         }
     })
 })
