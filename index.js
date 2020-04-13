@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
         const { user, error } = addUser(socket.id, name, room)
         if (error) return callback(error)
 
-        socket.emit('message', { user: 'admin', text: `Hello ${user.name}, welcome to room: ${user.room}` })
+        socket.emit('message', { user: 'admin', text: `Hello ${user.name} :), welcome to room: ${user.room}` })
         socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name}, has joined the room` })
 
         socket.join(user.room)
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         const users = getUsersInRoom(room)
 
         users.map( userInTheRoom => {
-            socket.emit('message', {user: name, text: `${userInTheRoom.name} is in the room`})
+            socket.emit('message', {user: 'admin', text: `${userInTheRoom.name} is in the room`})
         })
 
         callback()

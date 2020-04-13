@@ -8,8 +8,8 @@ const addUser = (id, name, room ) => {
     (user) => user.room === room && user.name === name
   );
 
-  if (existingUser) {
-    return { error: "Username is taken" };
+  if (existingUser || name === 'admin') {
+    return { error: "Name is taken" };
   }
 
   const user = { id, name, room };
